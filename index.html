@@ -82,4 +82,70 @@
         padding: 15px;
       }
       h2 { font-size: 20px; }
-      input, select, button { font-size:
+      input, select, button { font-size: 14px; }
+      .result { font-size: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>คำนวณขนาดท่อช่วยหายใจเด็ก</h2>
+    <label for="age">กรอกอายุ (ปี):</label>
+    <input type="number" id="age" min="1" max="15" placeholder="1 - 15">
+
+    <label for="tubeType">เลือกชนิดท่อ:</label>
+    <select id="tubeType">
+      <option value="uncuffed">Uncuffed</option>
+      <option value="cuffed">Cuffed</option>
+    </select>
+
+    <button onclick="calculateETT()">คำนวณ</button>
+    <button onclick="resetForm()" style="background:#ccc; color:#000;">รีเซ็ต</button>
+
+    <div id="ettResult" class="result" style="display:none;"></div>
+    <div id="depthResult" class="result depth" style="display:none;"></div>
+  </div>
+
+  <script>
+    function roundToNearestHalf(num) {
+      return Math.round(num * 2) / 2;
+    }
+
+    function calculateETT() {
+      const age = parseFloat(document.getElementById('age').value);
+      const tubeType = document.getElementById('tubeType').value;
+      const ettResultDiv = document.getElementById('ettResult');
+      const depthResultDiv = document.getElementById('depthResult');
+
+      if (!age || age < 1 || age > 15) {
+        alert('กรุณากรอกอายุระหว่าง 1-15 ปี');
+        return;
+      }
+
+      let ettSize;
+      if (tubeType === 'cuffed') {
+        ettSize = age/4 + 3.5;
+        ettResultDiv.className = 'result ett-cuffed';
+        ettResultDiv.innerHTML = `ขนาดท่อ (Cuffed): ${ettSize.toFixed(1)} มม.<br>แนะนำใช้: ${roundToNearestHalf(ettSize).toFixed(1)} มม.`;
+      } else {
+        ettSize = age/4 + 4;
+        ettResultDiv.className = 'result ett-uncuffed';
+        ettResultDiv.innerHTML = `ขนาดท่อ (Uncuffed): ${ettSize.toFixed(1)} มม.<br>แนะนำใช้: ${roundToNearestHalf(ettSize).toFixed(1)} มม.`;
+      }
+
+      let depth = age/2 + 12;
+      depthResultDiv.innerHTML = `ความลึกของท่อ: ${depth.toFixed(1)} ซม.`;
+
+      ettResultDiv.style.display = 'block';
+      depthResultDiv.style.display = 'block';
+    }
+
+    function resetForm() {
+      document.getElementById('age').value = '';
+      document.getElementById('tubeType').value = 'uncuffed';
+      document.getElementById('ettResult').style.display = 'none';
+      document.getElementById('depthResult').style.display = 'none';
+    }
+  </script>
+</body>
+</html>
